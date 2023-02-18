@@ -41,7 +41,7 @@ describe('GqrRqgViewResponsesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('trivial filter', () => {
+  it('trivial filter', () => {
     component.indicateMissingResponses = true;
     component.sectionOfView = '';
     component.section = '';
