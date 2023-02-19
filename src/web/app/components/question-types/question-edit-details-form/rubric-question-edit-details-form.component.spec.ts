@@ -14,7 +14,7 @@ describe('RubricQuestionEditDetailsFormComponent', () => {
       ],
       declarations: [RubricQuestionEditDetailsFormComponent],
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

@@ -15,7 +15,7 @@ import { QuestionEditDetailsFormComponent } from './question-edit-details-form.c
   styleUrls: ['./rubric-question-edit-details-form.component.scss'],
 })
 export class RubricQuestionEditDetailsFormComponent
-  extends QuestionEditDetailsFormComponent<FeedbackRubricQuestionDetails> {
+    extends QuestionEditDetailsFormComponent<FeedbackRubricQuestionDetails> {
 
   rowToHighlight: number = -1;
   columnToHighlight: number = -1;
@@ -166,29 +166,29 @@ export class RubricQuestionEditDetailsFormComponent
     }
 
     this.simpleModalService.openConfirmationModal('Delete the row?', SimpleModalType.WARNING,
-      'Are you sure you want to clear the row?').result.then(() => {
+        'Are you sure you want to clear the row?').result.then(() => {
 
-        const newSubQuestions: string[] = this.model.rubricSubQuestions.slice();
-        newSubQuestions.splice(index, 1);
+          const newSubQuestions: string[] = this.model.rubricSubQuestions.slice();
+          newSubQuestions.splice(index, 1);
 
-        const newDescriptions: string[][] = this.model.rubricDescriptions.map((arr: string[]) => arr.slice());
-        newDescriptions.splice(index, 1);
+          const newDescriptions: string[][] = this.model.rubricDescriptions.map((arr: string[]) => arr.slice());
+          newDescriptions.splice(index, 1);
 
-        // update weights
-        let newWeightsForEachCell: number[][] = [];
-        if (this.model.hasAssignedWeights) {
-          newWeightsForEachCell = this.model.rubricWeightsForEachCell.map((arr: number[]) => arr.slice());
+      // update weights
+          let newWeightsForEachCell: number[][] = [];
+          if (this.model.hasAssignedWeights) {
+            newWeightsForEachCell = this.model.rubricWeightsForEachCell.map((arr: number[]) => arr.slice());
 
-          newWeightsForEachCell.splice(index, 1);
-        }
+            newWeightsForEachCell.splice(index, 1);
+          }
 
-        this.triggerModelChangeBatch({
-          rubricSubQuestions: newSubQuestions,
-          rubricDescriptions: newDescriptions,
-          rubricWeightsForEachCell: newWeightsForEachCell,
-        });
+          this.triggerModelChangeBatch({
+            rubricSubQuestions: newSubQuestions,
+            rubricDescriptions: newDescriptions,
+            rubricWeightsForEachCell: newWeightsForEachCell,
+          });
 
-      }, () => { });
+        }, () => {});
   }
 
   /**
@@ -196,32 +196,32 @@ export class RubricQuestionEditDetailsFormComponent
    */
   deleteChoice(index: number): void {
     this.simpleModalService.openConfirmationModal('Delete the column?', SimpleModalType.WARNING,
-      'Are you sure you want to clear the column?').result.then(() => {
-        const newChoices: string[] = this.model.rubricChoices.slice();
-        newChoices.splice(index, 1);
+        'Are you sure you want to clear the column?').result.then(() => {
+          const newChoices: string[] = this.model.rubricChoices.slice();
+          newChoices.splice(index, 1);
 
-        const newDescriptions: string[][] = this.model.rubricDescriptions.map((arr: string[]) => {
-          const newArr: string[] = arr.slice();
-          newArr.splice(index, 1);
-          return newArr;
-        });
-
-        // update weights
-        let newWeightsForEachCell: number[][] = [];
-        if (this.model.hasAssignedWeights) {
-          newWeightsForEachCell = this.model.rubricWeightsForEachCell.map((arr: number[]) => {
-            const newArr: number[] = arr.slice();
+          const newDescriptions: string[][] = this.model.rubricDescriptions.map((arr: string[]) => {
+            const newArr: string[] = arr.slice();
             newArr.splice(index, 1);
             return newArr;
           });
-        }
 
-        this.triggerModelChangeBatch({
-          rubricChoices: newChoices,
-          rubricDescriptions: newDescriptions,
-          rubricWeightsForEachCell: newWeightsForEachCell,
-        });
-      }, () => { });
+      // update weights
+          let newWeightsForEachCell: number[][] = [];
+          if (this.model.hasAssignedWeights) {
+            newWeightsForEachCell = this.model.rubricWeightsForEachCell.map((arr: number[]) => {
+              const newArr: number[] = arr.slice();
+              newArr.splice(index, 1);
+              return newArr;
+            });
+          }
+
+          this.triggerModelChangeBatch({
+            rubricChoices: newChoices,
+            rubricDescriptions: newDescriptions,
+            rubricWeightsForEachCell: newWeightsForEachCell,
+          });
+        }, () => {});
   }
 
   /**
@@ -231,7 +231,7 @@ export class RubricQuestionEditDetailsFormComponent
     this.triggerModelChangeBatch({
       hasAssignedWeights: isEnabled,
       rubricWeightsForEachCell:
-        isEnabled ? this.model.rubricDescriptions.map((arr: string[]) => arr.map(() => 0)) : [],
+          isEnabled ? this.model.rubricDescriptions.map((arr: string[]) => arr.map(() => 0)) : [],
     });
   }
 
