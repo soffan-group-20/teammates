@@ -6,29 +6,6 @@ import { McqQuestionStatisticsComponent } from './mcq-question-statistics.compon
 import { Response } from './question-statistics';
 import ResponseTestData from './test-data/mcqQuestionResponses.json';
 
-// describe('McqQuestionStatisticsCalculation', () => {
-//   let component: McqQuestionStatisticsCalculation;
-//   let fixture: ComponentFixture<McqQuestionStatisticsCalculation>;
-
-//   beforeEach(waitForAsync(() => {
-//     TestBed.configureTestingModule({
-//       declarations: [McqQuestionStatisticsCalculation],
-//     }).compileComponents();
-//   }));
-
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(McqQuestionStatisticsCalculation);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-
-
-// });
-
 describe('McqQuestionStatisticsComponent', () => {
   let component: McqQuestionStatisticsComponent;
   let fixture: ComponentFixture<McqQuestionStatisticsComponent>;
@@ -49,7 +26,7 @@ describe('McqQuestionStatisticsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    
+
     console.log(component.b);
   });
 
