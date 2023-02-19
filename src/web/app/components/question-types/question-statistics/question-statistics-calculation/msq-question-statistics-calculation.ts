@@ -8,14 +8,16 @@ import { MSQ_ANSWER_NONE_OF_THE_ABOVE } from '../../../../../types/feedback-resp
 import { QuestionStatistics } from '../question-statistics';
 import { McqMsqQuestionStatisticsCalculation } from './mcq-msq-question-statistics-calculation';
 
+const getSum = (prev: number, curr: number): number => prev + curr;
+
 /**
  * Class to calculate stats for msq question.
  */
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class MsqQuestionStatisticsCalculation
-    extends QuestionStatistics<FeedbackMsqQuestionDetails, FeedbackMsqResponseDetails>
-    implements McqMsqQuestionStatisticsCalculation {
+  extends QuestionStatistics<FeedbackMsqQuestionDetails, FeedbackMsqResponseDetails>
+  implements McqMsqQuestionStatisticsCalculation {
 
   answerFrequency: Record<string, number> = {};
   percentagePerOption: Record<string, number> = {};
@@ -24,7 +26,7 @@ export class MsqQuestionStatisticsCalculation
   perRecipientResponses: Record<string, any> = {};
   hasAnswers: boolean = false;
 
-  calculateStatistics(): void {
+  private clear() {
     this.answerFrequency = {};
     this.percentagePerOption = {};
     this.weightPerOption = {};
@@ -34,19 +36,13 @@ export class MsqQuestionStatisticsCalculation
     for (const answer of this.question.msqChoices) {
       this.answerFrequency[answer] = 0;
     }
+
     if (this.question.otherEnabled) {
       this.answerFrequency['Other'] = 0;
     }
-    for (const response of this.responses) {
-      this.updateResponseCountPerOptionForResponse(response.responseDetails, this.answerFrequency);
-    }
-    const numOfAnswers: number =
-        Object.values(this.answerFrequency).reduce((prev: number, curr: number) => prev + curr, 0);
-    this.hasAnswers = numOfAnswers !== 0;
-    if (!this.hasAnswers) {
-      return;
-    }
+  }
 
+  private calculateWeights() {
     if (this.question.hasAssignedWeights) {
       for (let i: number = 0; i < this.question.msqChoices.length; i += 1) {
         const option: string = this.question.msqChoices[i];
@@ -68,21 +64,20 @@ export class MsqQuestionStatisticsCalculation
         const weight: number = this.weightPerOption[answer];
         const frequency: number = this.answerFrequency[answer];
         const weightedPercentage: number = totalWeightedResponseCount === 0 ? 0
-            : 100 * ((frequency * weight) / totalWeightedResponseCount);
+          : 100 * ((frequency * weight) / totalWeightedResponseCount);
         this.weightedPercentagePerOption[answer] = +weightedPercentage.toFixed(2);
       }
     }
+  }
 
+  private calculatePercentage(numOfAnswers: number) {
     for (const answer of Object.keys(this.answerFrequency)) {
       const percentage: number = numOfAnswers ? 100 * this.answerFrequency[answer] / numOfAnswers : 0;
       this.percentagePerOption[answer] = +percentage.toFixed(2);
     }
+  }
 
-    // per recipient stats is only available when weights are enabled
-    if (!this.question.hasAssignedWeights) {
-      return;
-    }
-
+  private calculateRecipientStats() {
     const perRecipientResponse: Record<string, Record<string, number>> = {};
     const recipientToTeam: Record<string, string> = {};
     for (const response of this.responses) {
@@ -95,6 +90,7 @@ export class MsqQuestionStatisticsCalculation
       }
       recipientToTeam[response.recipient] = response.recipientTeam;
     }
+
     for (const response of this.responses) {
       this.updateResponseCountPerOptionForResponse(response.responseDetails, perRecipientResponse[response.recipient]);
     }
@@ -122,11 +118,36 @@ export class MsqQuestionStatisticsCalculation
     }
   }
 
+  calculateStatistics(): void {
+    this.clear();
+
+    for (const response of this.responses) {
+      this.updateResponseCountPerOptionForResponse(response.responseDetails, this.answerFrequency);
+    }
+
+    const numOfAnswers: number = Object.values(this.answerFrequency).reduce(getSum, 0);
+    this.hasAnswers = numOfAnswers !== 0;
+
+    if (!this.hasAnswers) {
+      return;
+    }
+
+    this.calculateWeights();
+    this.calculatePercentage(numOfAnswers);
+
+    // per recipient stats is only available when weights are enabled
+    if (!this.question.hasAssignedWeights) {
+      return;
+    }
+
+    this.calculateRecipientStats();
+  }
+
   /**
    * Updates the number of responses per option for each response in responseCountPerOption map.
    */
   private updateResponseCountPerOptionForResponse(responseDetails: FeedbackMsqResponseDetails,
-                                                  responseCountPerOption: Record<string, number>): void {
+    responseCountPerOption: Record<string, number>): void {
     if (responseDetails.isOther) {
       responseCountPerOption['Other'] = (responseCountPerOption['Other'] || 0) + 1;
     }
@@ -137,7 +158,7 @@ export class MsqQuestionStatisticsCalculation
         continue;
       }
       if (this.question.msqChoices.indexOf(answer) === -1
-          && this.question.generateOptionsFor === FeedbackParticipantType.NONE) {
+        && this.question.generateOptionsFor === FeedbackParticipantType.NONE) {
         // ignore other answer if any
         continue;
       }
