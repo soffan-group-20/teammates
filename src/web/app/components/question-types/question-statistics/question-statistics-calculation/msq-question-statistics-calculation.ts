@@ -26,7 +26,7 @@ export class MsqQuestionStatisticsCalculation
   perRecipientResponses: Record<string, any> = {};
   hasAnswers: boolean = false;
 
-  private clear() {
+  private clear(): void {
     this.answerFrequency = {};
     this.percentagePerOption = {};
     this.weightPerOption = {};
@@ -42,7 +42,7 @@ export class MsqQuestionStatisticsCalculation
     }
   }
 
-  private calculateWeights() {
+  private calculateWeights(): void {
     if (this.question.hasAssignedWeights) {
       for (let i: number = 0; i < this.question.msqChoices.length; i += 1) {
         const option: string = this.question.msqChoices[i];
@@ -70,14 +70,14 @@ export class MsqQuestionStatisticsCalculation
     }
   }
 
-  private calculatePercentage(numOfAnswers: number) {
+  private calculatePercentage(numOfAnswers: number): void {
     for (const answer of Object.keys(this.answerFrequency)) {
       const percentage: number = numOfAnswers ? 100 * this.answerFrequency[answer] / numOfAnswers : 0;
       this.percentagePerOption[answer] = +percentage.toFixed(2);
     }
   }
 
-  private calculateRecipientStats() {
+  private calculateRecipientStats(): void {
     const perRecipientResponse: Record<string, Record<string, number>> = {};
     const recipientToTeam: Record<string, string> = {};
     for (const response of this.responses) {
