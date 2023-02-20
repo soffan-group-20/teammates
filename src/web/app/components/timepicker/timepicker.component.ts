@@ -75,29 +75,29 @@ export class TimepickerComponent {
   isOptionDisabled(t: TimeFormat): boolean {
 
     if(this.minDate) {
-      this.b[1] = true;
+      this.b[0] = true;
       if(this.minTime) {
-        this.b[2] = true;
+        this.b[1] = true;
         if(this.minDate != null ) {
-          this.b[3] = true;
+          this.b[2] = true;
           if(this.date.year === this.minDate.year) {
-            this.b[4] = true;
+            this.b[3] = true;
             if (this.minDate != null) {
-              this.b[5] = true;
+              this.b[4] = true;
               if (this.date.month === this.minDate.month) {
-                this.b[6] = true;
+                this.b[5] = true;
                 if (this.minDate != null) {
-                  this.b[7] = true;
+                  this.b[6] = true;
                   if (this.date.day === this.minDate.day) {
-                    this.b[8] = true;
+                    this.b[7] = true;
                     if (this.minTime != null) {
-                      this.b[9] = true;
+                      this.b[8] = true;
                       if (t.hour < this.minTime.hour) {
-                        this.b[10] = true;
+                        this.b[9] = true;
                       } else if (this.minTime != null) {
-                        this.b[11] = true;
+                        this.b[10] = true;
                         if (t.minute < this.minTime.minute) {
-                          this.b[12] = true;
+                          this.b[11] = true;
                         }
                       }
                     }
@@ -117,29 +117,29 @@ export class TimepickerComponent {
     }
 
     if(this.maxDate) {
-      this.b[13] = true;
+      this.b[12] = true;
       if(this.maxTime) {
-        this.b[14] = true;
+        this.b[13] = true;
         if(this.maxDate != null ) {
-          this.b[15] = true;
+          this.b[14] = true;
           if(this.date.year === this.maxDate.year) {
-            this.b[16] = true;
+            this.b[15] = true;
             if (this.maxDate != null) {
-              this.b[17] = true;
+              this.b[16] = true;
               if (this.date.month === this.maxDate.month) {
-                this.b[18] = true;
+                this.b[17] = true;
                 if (this.maxDate != null) {
-                  this.b[19] = true;
+                  this.b[18] = true;
                   if (this.date.day === this.maxDate.day) {
-                    this.b[20] = true;
+                    this.b[19] = true;
                     if (this.maxTime != null) {
-                      this.b[21] = true;
+                      this.b[20] = true;
                       if (t.hour < this.maxTime.hour) {
-                        this.b[22] = true;
+                        this.b[21] = true;
                       } else if (this.maxTime != null) {
-                        this.b[23] = true;
+                        this.b[22] = true;
                         if (t.minute < this.maxTime.minute) {
-                          this.b[24] = true;
+                          this.b[23] = true;
                         }
                       }
                     }
