@@ -65,4 +65,33 @@ describe('GqrRqgViewResponsesComponent', () => {
     component.ngOnInit();
     expect(component.userToEmail['test']).toEqual('test@test.com');
   });
+
+  it('clears all filters', () => {
+    component.responsesToShow = {
+      test: [
+        {
+          isTabExpanded: true,
+          questionOutput: {} as QuestionOutput,
+        },
+      ],
+    };
+
+    component.teamExpanded = {
+      aTeam: true,
+      bTeam: false,
+      cTeam: true,
+    };
+
+    component.userIsInstructor = {
+      testUserA: true,
+      testUserB: false,
+      testUserC: true,
+    };
+
+    component.resetFilters();
+
+    expect(Object.keys(component.responsesToShow).length).toEqual(0);
+    expect(Object.keys(component.teamExpanded).length).toEqual(0);
+    expect(Object.keys(component.userIsInstructor).length).toEqual(0);
+  });
 });
