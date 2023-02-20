@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { InstructorSessionResultSectionType } from '../../../../../web/app/pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
 import { QuestionOutput } from 'src/web/types/api-output';
 import { FeedbackQuestionType } from '../../../../../web/types/api-request';
 import { ResponseModerationButtonModule } from '../../../pages-instructor/instructor-session-result-page/response-moderation-button/response-moderation-button.module';
@@ -64,5 +65,42 @@ describe('GqrRqgViewResponsesComponent', () => {
     ];
     component.ngOnInit();
     expect(component.userToEmail['test']).toEqual('test@test.com');
+  });
+
+  it('tests filterUserExpandedRespones', () => {
+    component.indicateMissingResponses = true;
+    component.sectionOfView = '';
+    component.section = 'testSection';
+    component.isGqr = false;
+    component.sectionType = InstructorSessionResultSectionType.EITHER;
+
+    // Fake response data
+    component.userExpanded = {
+      testUserA: true,
+    };
+
+    component.responses = [
+      {
+        allResponses: [
+          {
+            recipient: 'testUserA',
+            giverSection: 'testSection',
+          },
+        ],
+      } as QuestionOutput,
+    ];
+
+    component.filterUserExpandedRespones();
+
+    expect(Object.keys(component.responsesToShow).length).toEqual(1);
+    expect(component.responsesToShow['testUserA']).toBeDefined();
+    expect(
+      component.responsesToShow['testUserA'][0].questionOutput.allResponses[0]
+        .recipient
+    ).toEqual('testUserA');
+    expect(
+      component.responsesToShow['testUserA'][0].questionOutput.allResponses[0]
+        .giverSection
+    ).toEqual('testSection');
   });
 });
