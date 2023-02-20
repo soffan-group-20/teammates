@@ -104,6 +104,27 @@ export class GqrRqgViewResponsesComponent
     this.userIsInstructor = {};
   }
 
+  private includeIfEmailIsRelatedToUser(response: ResponseOutput): void {
+    if (response.giverEmail) {
+      this.userToEmail[response.giver] = response.giverEmail;
+    }
+    if (response.recipientEmail) {
+      this.userToEmail[response.recipient] = response.recipientEmail;
+    }
+  }
+
+  private responseIsPartOfSectionView(response: ResponseOutput): boolean {
+    if (this.sectionOfView) {
+      if (
+        (this.isGqr && response.giverSection !== this.sectionOfView) ||
+        (!this.isGqr && response.recipientSection !== this.sectionOfView)
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private filterAllResponses(): void {
     for (const question of this.responses) {
       for (const response of question.allResponses) {
@@ -112,30 +133,21 @@ export class GqrRqgViewResponsesComponent
           continue;
         }
 
-        if (this.sectionOfView) {
-          if (
-            (this.isGqr && response.giverSection !== this.sectionOfView) ||
-            (!this.isGqr && response.recipientSection !== this.sectionOfView)
-          ) {
-            continue;
-          }
-        }
-        const shouldDisplayBasedOnSection: boolean =
-          this.feedbackResponsesService.isFeedbackResponsesDisplayedOnSection(
-            response,
-            this.section,
-            this.sectionType
-          );
-        if (!shouldDisplayBasedOnSection) {
+        if (!this.responseIsPartOfSectionView(response)) {
           continue;
         }
 
-        if (response.giverEmail) {
-          this.userToEmail[response.giver] = response.giverEmail;
+        if (
+          !this.feedbackResponsesService.isFeedbackResponsesDisplayedOnSection(
+            response,
+            this.section,
+            this.sectionType
+          )
+        ) {
+          continue;
         }
-        if (response.recipientEmail) {
-          this.userToEmail[response.recipient] = response.recipientEmail;
-        }
+
+        this.includeIfEmailIsRelatedToUser(response);
 
         if (this.isGqr) {
           this.teamsToUsers[response.giverTeam] =
