@@ -69,7 +69,46 @@ export class TimepickerComponent {
    * <p> The valid time option is greater or equal than the minimum datetime and smaller or equal than the maximum
    * datetime.
    */
+
+  b: Record<number, boolean> = Object.fromEntries([...new Array(24)].map((_, i) => [i, false]));// Manual branch coverage array
+
   isOptionDisabled(t: TimeFormat): boolean {
+
+    if(this.minDate) {
+      this.b[1] = true;
+      if(this.minTime) {
+        this.b[2] = true;
+        if(this.minDate != null ) {
+          this.b[3] = true;
+          if(this.date.year === this.minDate.year) {
+            this.b[4] = true;
+            if (this.minDate != null) {
+              this.b[5] = true;
+              if (this.date.month === this.minDate.month) {
+                this.b[6] = true;
+                if (this.minDate != null) {
+                  this.b[7] = true;
+                  if (this.date.day === this.minDate.day) {
+                    this.b[8] = true;
+                    if (this.minTime != null) {
+                      this.b[9] = true;
+                      if (t.hour < this.minTime.hour) {
+                        this.b[10] = true;
+                      } else if (this.minTime != null) {
+                        this.b[11] = true;
+                        if (t.minute < this.minTime.minute) {
+                          this.b[12] = true;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     if (this.minDate && this.minTime
         && this.date.year === this.minDate?.year && this.date.month === this.minDate?.month
         && this.date.day === this.minDate?.day
@@ -77,6 +116,41 @@ export class TimepickerComponent {
       return true;
     }
 
+    if(this.maxDate) {
+      this.b[13] = true;
+      if(this.maxTime) {
+        this.b[14] = true;
+        if(this.maxDate != null ) {
+          this.b[15] = true;
+          if(this.date.year === this.maxDate.year) {
+            this.b[16] = true;
+            if (this.maxDate != null) {
+              this.b[17] = true;
+              if (this.date.month === this.maxDate.month) {
+                this.b[18] = true;
+                if (this.maxDate != null) {
+                  this.b[19] = true;
+                  if (this.date.day === this.maxDate.day) {
+                    this.b[20] = true;
+                    if (this.maxTime != null) {
+                      this.b[21] = true;
+                      if (t.hour < this.maxTime.hour) {
+                        this.b[22] = true;
+                      } else if (this.maxTime != null) {
+                        this.b[23] = true;
+                        if (t.minute < this.maxTime.minute) {
+                          this.b[24] = true;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     if (this.maxDate && this.maxTime
         && this.date.year === this.maxDate?.year && this.date.month === this.maxDate?.month
         && this.date.day === this.maxDate?.day
