@@ -134,11 +134,11 @@ export class TimepickerComponent {
                     this.b[19] = true;
                     if (this.maxTime != null) {
                       this.b[20] = true;
-                      if (t.hour < this.maxTime.hour) {
+                      if (t.hour > this.maxTime.hour) {
                         this.b[21] = true;
                       } else if (this.maxTime != null) {
                         this.b[22] = true;
-                        if (t.minute < this.maxTime.minute) {
+                        if (t.minute > this.maxTime.minute) {
                           this.b[23] = true;
                         }
                       }
