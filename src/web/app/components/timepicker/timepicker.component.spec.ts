@@ -29,4 +29,13 @@ describe('TimepickerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  fit('Should return true if given minute is larger than maxTime minute', () => {
+    component.maxTime = {hour: 12, minute: 30};
+    component.maxDate = {year: 2023, month: 2, day: 20};
+    component.date = {year: 2023, month: 2, day: 20};
+    let result = false;
+    result = component.isOptionDisabled({hour: 12, minute: 31});
+    expect(result).toBe(true);
+  });
 });
