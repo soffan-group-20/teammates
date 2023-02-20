@@ -232,7 +232,7 @@ export class GqrRqgViewResponsesComponent
     }
   }
 
-  private filterTeamExpandedResponses(): void {
+  filterTeamExpandedResponses(): void {
     for (const team of Object.keys(this.teamExpanded)) {
       for (const question of this.responses) {
         if (

@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { InstructorSessionResultSectionType } from '../../../../../web/app/pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
 import { QuestionOutput } from 'src/web/types/api-output';
 import { FeedbackQuestionType } from '../../../../../web/types/api-request';
 import { ResponseModerationButtonModule } from '../../../pages-instructor/instructor-session-result-page/response-moderation-button/response-moderation-button.module';
@@ -64,5 +65,48 @@ describe('GqrRqgViewResponsesComponent', () => {
     ];
     component.ngOnInit();
     expect(component.userToEmail['test']).toEqual('test@test.com');
+  });
+
+  it('tests filterTeamExpandedRespones', () => {
+    component.isGqr = false;
+    component.sectionType = InstructorSessionResultSectionType.EITHER;
+    component.section = 'testTeamSection';
+
+    component.teamExpanded = {
+      team1: true,
+    };
+
+    component.responses = [
+      {
+        allResponses: [
+          {
+            isMissingResponse: false,
+            recipientTeam: 'team1',
+            giverSection: 'testTeamSection',
+          },
+        ],
+        feedbackQuestion: {
+          questionType: FeedbackQuestionType.MCQ,
+        },
+      },
+    ] as QuestionOutput[];
+
+    component.filterTeamExpandedResponses();
+
+    expect(component.teamsToQuestions).toBeDefined();
+    expect(component.teamsToQuestions['team1']).toBeDefined();
+    expect(component.teamsToQuestions['team1'].length).toEqual(1);
+    expect(
+      component.teamsToQuestions['team1'][0].feedbackQuestion.questionType
+    ).toEqual(FeedbackQuestionType.MCQ);
+    expect(
+      component.teamsToQuestions['team1'][0].allResponses[0].isMissingResponse
+    ).toBeFalsy();
+    expect(
+      component.teamsToQuestions['team1'][0].allResponses[0].recipientTeam
+    ).toEqual('team1');
+    expect(
+      component.teamsToQuestions['team1'][0].allResponses[0].giverSection
+    ).toEqual('testTeamSection');
   });
 });
