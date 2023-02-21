@@ -93,7 +93,7 @@ export class GqrRqgViewResponsesComponent
     this.filterTeamExpandedResponses();
   }
 
-  private resetFilters(): void {
+  resetFilters(): void {
     this.responsesToShow = {};
     this.teamsToQuestions = {};
     this.teamsToUsers = {};
