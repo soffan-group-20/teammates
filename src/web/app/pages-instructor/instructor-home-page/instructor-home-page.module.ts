@@ -2,10 +2,16 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbCollapseModule, NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbCollapseModule,
+  NgbDropdownModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
+import { CourseCopyModule } from '../../components/course-copy/course-copy.module';
 import { LoadingRetryModule } from '../../components/loading-retry/loading-retry.module';
 import { LoadingSpinnerModule } from '../../components/loading-spinner/loading-spinner.module';
 import { PanelChevronModule } from '../../components/panel-chevron/panel-chevron.module';
+import { ProgressBarModule } from '../../components/progress-bar/progress-bar.module';
 import { SessionsTableModule } from '../../components/sessions-table/sessions-table.module';
 import { TeammatesRouterModule } from '../../components/teammates-router/teammates-router.module';
 import { InstructorHomePageComponent } from './instructor-home-page.component';
@@ -21,9 +27,7 @@ const routes: Routes = [
  * Module for instructor home page.
  */
 @NgModule({
-  declarations: [
-    InstructorHomePageComponent,
-  ],
+  declarations: [InstructorHomePageComponent],
   imports: [
     CommonModule,
     SessionsTableModule,
@@ -35,10 +39,10 @@ const routes: Routes = [
     LoadingSpinnerModule,
     LoadingRetryModule,
     PanelChevronModule,
+    ProgressBarModule,
     TeammatesRouterModule,
+    CourseCopyModule,
   ],
-  exports: [
-    InstructorHomePageComponent,
-  ],
+  exports: [InstructorHomePageComponent],
 })
-export class InstructorHomePageModule { }
+export class InstructorHomePageModule {}

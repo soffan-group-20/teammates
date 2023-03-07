@@ -15,7 +15,6 @@ import {
   Students,
 } from '../types/api-output';
 import { Intent } from '../types/api-request';
-import { CourseService } from './course.service';
 import { FeedbackSessionsService } from './feedback-sessions.service';
 import { HttpRequestService } from './http-request.service';
 import { InstructorService } from './instructor.service';
@@ -34,7 +33,6 @@ export class SearchService {
     private instructorService: InstructorService,
     private httpRequestService: HttpRequestService,
     private feedbackSessionService: FeedbackSessionsService,
-    private courseService: CourseService,
     private linkService: LinkService,
     private timezoneService: TimezoneService,
   ) {}
@@ -397,7 +395,7 @@ export class SearchService {
 
   private getDistinctCourses(distinctCourseIds: string[]): Observable<DistinctCoursesMap> {
     return forkJoin(
-      distinctCourseIds.map((id: string) => this.courseService.getCourseAsInstructor(id)),
+      distinctCourseIds.map((id: string) => this.instructorService.getCourseAsInstructor(id)),
     ).pipe(
       map((courses: Course[]) => {
         const distinctCoursesMap: DistinctCoursesMap = {};

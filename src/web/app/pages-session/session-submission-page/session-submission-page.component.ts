@@ -271,13 +271,13 @@ export class SessionSubmissionPageComponent implements OnInit, AfterViewInit {
     switch (this.intent) {
       case Intent.STUDENT_SUBMISSION:
         if (this.moderatedPerson || this.previewAsPerson) {
-          request = this.courseService.getCourseAsInstructor(this.courseId);
+          request = this.instructorService.getCourseAsInstructor(this.courseId);
         } else {
           request = this.courseService.getCourseAsStudent(this.courseId, this.regKey);
         }
         break;
       case Intent.INSTRUCTOR_SUBMISSION:
-        request = this.courseService.getCourseAsInstructor(this.courseId, this.regKey);
+        request = this.instructorService.getCourseAsInstructor(this.courseId, this.regKey);
         break;
       default:
         this.isCourseLoading = false;

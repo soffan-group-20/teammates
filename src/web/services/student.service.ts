@@ -6,9 +6,9 @@ import { ResourceEndpoints } from '../types/api-const';
 import { Course, EnrollStudents, MessageOutput, RegenerateKey, Student, Students } from '../types/api-output';
 import { StudentsEnrollRequest, StudentUpdateRequest } from '../types/api-request';
 import { SortBy, SortOrder } from '../types/sort-properties';
-import { CourseService } from './course.service';
 import { CsvHelper } from './csv-helper';
 import { HttpRequestService } from './http-request.service';
+import { InstructorService } from './instructor.service';
 import { TableComparatorService } from './table-comparator.service';
 
 /**
@@ -21,7 +21,7 @@ export class StudentService {
 
   constructor(private httpRequestService: HttpRequestService,
               private tableComparatorService: TableComparatorService,
-              private courseService: CourseService) {
+              private instructorService: InstructorService) {
   }
 
   /**
@@ -138,7 +138,7 @@ export class StudentService {
    * Loads list of students from a course in CSV format by calling API.
    */
   loadStudentListAsCsv(queryParams: { courseId: string }): Observable<string> {
-    return this.courseService.getCourseAsInstructor(queryParams.courseId).pipe(mergeMap((course: Course) => {
+    return this.instructorService.getCourseAsInstructor(queryParams.courseId).pipe(mergeMap((course: Course) => {
       return this.getStudentsFromCourse({ courseId: queryParams.courseId }).pipe(map((students: Students) => {
         return this.processStudentsToCsv(course.courseId, course.courseName, students.students);
       }));

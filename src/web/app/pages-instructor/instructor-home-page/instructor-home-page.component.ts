@@ -77,6 +77,8 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
   hasCoursesLoadingFailed: boolean = false;
   isNewUser: boolean = false;
   isCopyLoading: boolean = false;
+  isCopyingCourse: boolean = false;
+  allCoursesList: Course[] = [];
 
   @ViewChild('modifiedTimestampsModal') modifiedTimestampsModal!: TemplateRef<any>;
 
@@ -171,6 +173,7 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
       });
     }, () => {});
   }
+
   /**
    * Loads courses of current instructor.
    */
@@ -178,6 +181,8 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
     this.hasCoursesLoaded = false;
     this.hasCoursesLoadingFailed = false;
     this.courseTabModels = [];
+    this.allCoursesList = [];
+
     this.courseService.getInstructorCoursesThatAreActive()
         .pipe(finalize(() => {
           this.hasCoursesLoaded = true;
@@ -207,6 +212,29 @@ export class InstructorHomePageComponent extends InstructorSessionModalPageCompo
             this.statusMessageService.showErrorToast(resp.error.message);
           },
         });
+
+    const appendCourses = (resp: Courses): void => {
+      this.allCoursesList = [...this.allCoursesList, ...resp.courses];
+    };
+
+    this.courseService.getAllCoursesAsInstructor('active').subscribe({
+      next: appendCourses,
+    });
+
+    this.courseService.getAllCoursesAsInstructor('archived').subscribe({
+      next: appendCourses,
+    });
+
+    this.courseService.getAllCoursesAsInstructor('softDeleted').subscribe({
+      next: appendCourses,
+    });
+  }
+
+  /**
+   * When a course was copied, reload all courses.
+   */
+  onCourseCopy(): void {
+    this.loadCourses();
   }
 
   /**
