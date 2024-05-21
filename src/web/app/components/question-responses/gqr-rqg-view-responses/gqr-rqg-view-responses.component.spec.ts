@@ -1,9 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {
-  ResponseModerationButtonModule,
-} from '../../../pages-instructor/instructor-session-result-page/response-moderation-button/response-moderation-button.module';
+import { ResponseModerationButtonModule } from '../../../pages-instructor/instructor-session-result-page/response-moderation-button/response-moderation-button.module';
 import { PanelChevronModule } from '../../panel-chevron/panel-chevron.module';
 import { QuestionTextWithInfoModule } from '../../question-text-with-info/question-text-with-info.module';
 import { TeammatesCommonModule } from '../../teammates-common/teammates-common.module';
@@ -28,8 +26,7 @@ describe('GqrRqgViewResponsesComponent', () => {
         NgbModule,
         PanelChevronModule,
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -38,7 +35,10 @@ describe('GqrRqgViewResponsesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
+    component.ngOnInit();
+
+    console.log(component.b);
   });
 });

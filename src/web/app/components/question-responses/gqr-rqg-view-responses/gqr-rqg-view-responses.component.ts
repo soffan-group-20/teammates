@@ -1,15 +1,17 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FeedbackResponsesService } from '../../../../services/feedback-responses.service';
 import {
-  FeedbackParticipantType, FeedbackQuestionType,
-  FeedbackSession, FeedbackSessionPublishStatus, FeedbackSessionSubmissionStatus,
-  QuestionOutput, ResponseOutput,
+  FeedbackParticipantType,
+  FeedbackQuestionType,
+  FeedbackSession,
+  FeedbackSessionPublishStatus,
+  FeedbackSessionSubmissionStatus,
+  QuestionOutput,
+  ResponseOutput,
   ResponseVisibleSetting,
   SessionVisibleSetting,
 } from '../../../../types/api-output';
-import {
-  InstructorSessionResultSectionType,
-} from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
+import { InstructorSessionResultSectionType } from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
 import { collapseAnim } from '../../teammates-common/collapse-anim';
 import { InstructorResponsesViewBase } from '../instructor-responses-view-base';
 
@@ -28,12 +30,15 @@ interface QuestionTab {
   styleUrls: ['./gqr-rqg-view-responses.component.scss'],
   animations: [collapseAnim],
 })
-export class GqrRqgViewResponsesComponent extends InstructorResponsesViewBase implements OnInit, OnChanges {
-
+export class GqrRqgViewResponsesComponent
+  extends InstructorResponsesViewBase
+  implements OnInit, OnChanges
+{
   @Input() responses: QuestionOutput[] = [];
   @Input() sectionOfView: string = '';
   @Input() section: string = '';
-  @Input() sectionType: InstructorSessionResultSectionType = InstructorSessionResultSectionType.EITHER;
+  @Input() sectionType: InstructorSessionResultSectionType =
+    InstructorSessionResultSectionType.EITHER;
   @Input() groupByTeam: boolean = true;
   @Input() showStatistics: boolean = true;
   @Input() indicateMissingResponses: boolean = true;
@@ -69,6 +74,8 @@ export class GqrRqgViewResponsesComponent extends InstructorResponsesViewBase im
   responsesToShow: Record<string, QuestionTab[]> = {};
   teamsToQuestions: Record<string, QuestionOutput[]> = {};
 
+  b: Record<number, boolean> = {};
+
   constructor(private feedbackResponsesService: FeedbackResponsesService) {
     super();
   }
@@ -90,58 +97,120 @@ export class GqrRqgViewResponsesComponent extends InstructorResponsesViewBase im
     this.userToRelatedEmail = {};
     this.userExpanded = {};
     this.userIsInstructor = {};
+
+    for (let i = 0; i < 43; i++) {
+      this.b[i] = false;
+    }
+
+    const branch = (
+      index: number | number[],
+      expression?: boolean | string | number | null | undefined
+    ): boolean => {
+      if (Array.isArray(index)) {
+        for (const i of index) {
+          this.b[i] = true;
+        }
+      } else {
+        this.b[index] = true;
+      }
+      console.log(this.b);
+      return !!expression;
+    };
+
     for (const question of this.responses) {
+      branch(1);
       for (const response of question.allResponses) {
-        if (!this.indicateMissingResponses && response.isMissingResponse) {
+        branch(2);
+        if (
+          branch(
+            [3, 4],
+            !this.indicateMissingResponses && response.isMissingResponse
+          )
+        ) {
           // filter out missing responses
           continue;
         }
 
-        if (this.sectionOfView) {
-          if (this.isGqr && response.giverSection !== this.sectionOfView
-              || !this.isGqr && response.recipientSection !== this.sectionOfView) {
+        if (branch(5, this.sectionOfView)) {
+          if (
+            branch(
+              [5, 6, 7, 8],
+              (this.isGqr && response.giverSection !== this.sectionOfView) ||
+                (!this.isGqr &&
+                  response.recipientSection !== this.sectionOfView)
+            )
+          ) {
             continue;
           }
         }
-        const shouldDisplayBasedOnSection: boolean = this.feedbackResponsesService
-            .isFeedbackResponsesDisplayedOnSection(response, this.section, this.sectionType);
-        if (!shouldDisplayBasedOnSection) {
+        const shouldDisplayBasedOnSection: boolean =
+          this.feedbackResponsesService.isFeedbackResponsesDisplayedOnSection(
+            response,
+            this.section,
+            this.sectionType
+          );
+        if (branch(9, !shouldDisplayBasedOnSection)) {
           continue;
         }
 
         if (response.giverEmail) {
+          branch(10);
           this.userToEmail[response.giver] = response.giverEmail;
         }
         if (response.recipientEmail) {
+          branch(11);
           this.userToEmail[response.recipient] = response.recipientEmail;
         }
 
         if (this.isGqr) {
-          this.teamsToUsers[response.giverTeam] = this.teamsToUsers[response.giverTeam] || [];
-          if (this.teamsToUsers[response.giverTeam].indexOf(response.giver) === -1) {
+          branch([12, 13]);
+          this.teamsToUsers[response.giverTeam] =
+            this.teamsToUsers[response.giverTeam] || [];
+          if (
+            this.teamsToUsers[response.giverTeam].indexOf(response.giver) === -1
+          ) {
+            branch(14);
             this.teamsToUsers[response.giverTeam].push(response.giver);
             this.teamExpanded[response.giverTeam] = this.isExpandAll;
           }
           if (response.relatedGiverEmail) {
-            this.userToRelatedEmail[response.giver] = response.relatedGiverEmail;
+            branch(15);
+            this.userToRelatedEmail[response.giver] =
+              response.relatedGiverEmail;
           }
 
           this.userExpanded[response.giver] = this.isExpandAll;
           this.userIsInstructor[response.giver] =
-              question.feedbackQuestion.giverType === FeedbackParticipantType.INSTRUCTORS;
+            question.feedbackQuestion.giverType ===
+            FeedbackParticipantType.INSTRUCTORS;
         } else {
+          branch(16);
           if (!response.recipientTeam) {
+            branch([17, 18]);
             // Recipient is team
-            this.teamsToUsers[response.recipient] = this.teamsToUsers[response.recipient] || [];
-            if (this.teamsToUsers[response.recipient].indexOf(response.recipient) === -1) {
+            this.teamsToUsers[response.recipient] =
+              this.teamsToUsers[response.recipient] || [];
+            if (
+              this.teamsToUsers[response.recipient].indexOf(
+                response.recipient
+              ) === -1
+            ) {
+              branch(19);
               this.teamsToUsers[response.recipient].push(response.recipient);
               this.teamExpanded[response.recipient] = this.isExpandAll;
             }
             this.userExpanded[response.recipient] = this.isExpandAll;
             continue;
           }
-          this.teamsToUsers[response.recipientTeam] = this.teamsToUsers[response.recipientTeam] || [];
-          if (this.teamsToUsers[response.recipientTeam].indexOf(response.recipient) === -1) {
+          branch(20);
+          this.teamsToUsers[response.recipientTeam] =
+            this.teamsToUsers[response.recipientTeam] || [];
+          if (
+            this.teamsToUsers[response.recipientTeam].indexOf(
+              response.recipient
+            ) === -1
+          ) {
+            branch(21);
             this.teamsToUsers[response.recipientTeam].push(response.recipient);
             this.teamExpanded[response.recipientTeam] = this.isExpandAll;
           }
@@ -151,31 +220,47 @@ export class GqrRqgViewResponsesComponent extends InstructorResponsesViewBase im
     }
 
     for (const user of Object.keys(this.userExpanded)) {
+      branch(22);
       for (const question of this.responses) {
-        const questionCopy: QuestionOutput = JSON.parse(JSON.stringify(question));
-        questionCopy.allResponses = questionCopy.allResponses.filter((response: ResponseOutput) => {
-          if (!this.indicateMissingResponses && response.isMissingResponse) {
-            // filter out missing responses
-            return false;
-          }
-          if (this.isGqr && user !== response.giver) {
-            return false;
-          }
-          if (!this.isGqr && user !== response.recipient) {
-            return false;
-          }
+        branch(23);
+        const questionCopy: QuestionOutput = JSON.parse(
+          JSON.stringify(question)
+        );
+        questionCopy.allResponses = questionCopy.allResponses.filter(
+          (response: ResponseOutput) => {
+            if (
+              branch(
+                [24, 25],
+                !this.indicateMissingResponses && response.isMissingResponse
+              )
+            ) {
+              // filter out missing responses
+              return false;
+            }
+            if (branch([26, 27], this.isGqr && user !== response.giver)) {
+              return false;
+            }
+            if (branch([28, 29], !this.isGqr && user !== response.recipient)) {
+              return false;
+            }
 
-          const shouldDisplayBasedOnSection: boolean = this.feedbackResponsesService
-            .isFeedbackResponsesDisplayedOnSection(response, this.section, this.sectionType);
+            const shouldDisplayBasedOnSection: boolean =
+              this.feedbackResponsesService.isFeedbackResponsesDisplayedOnSection(
+                response,
+                this.section,
+                this.sectionType
+              );
 
-          if (!shouldDisplayBasedOnSection) {
-            return false;
+            if (branch(30, !shouldDisplayBasedOnSection)) {
+              return false;
+            }
+
+            return true;
           }
-
-          return true;
-        });
+        );
 
         if (questionCopy.allResponses.length) {
+          branch([31, 32]);
           this.responsesToShow[user] = this.responsesToShow[user] || [];
           this.responsesToShow[user].push({
             questionOutput: questionCopy,
@@ -186,36 +271,52 @@ export class GqrRqgViewResponsesComponent extends InstructorResponsesViewBase im
     }
 
     for (const team of Object.keys(this.teamExpanded)) {
+      branch(33);
       for (const question of this.responses) {
-        if (question.feedbackQuestion.questionType === FeedbackQuestionType.CONTRIB
-            || question.feedbackQuestion.questionType === FeedbackQuestionType.TEXT) {
+        branch([34, 35]);
+        if (
+          question.feedbackQuestion.questionType ===
+            FeedbackQuestionType.CONTRIB ||
+          question.feedbackQuestion.questionType === FeedbackQuestionType.TEXT
+        ) {
           // Should not display anything for contribution and text questions
           continue;
         }
-        const questionCopy: QuestionOutput = JSON.parse(JSON.stringify(question));
-        questionCopy.allResponses = questionCopy.allResponses.filter((response: ResponseOutput) => {
-          if (response.isMissingResponse) {
-            // Missing response is meaningless for team statistics
-            return false;
-          }
-          if (this.isGqr && team !== response.giverTeam) {
-            return false;
-          }
-          if (!this.isGqr && team !== response.recipientTeam) {
-            return false;
-          }
+        const questionCopy: QuestionOutput = JSON.parse(
+          JSON.stringify(question)
+        );
+        questionCopy.allResponses = questionCopy.allResponses.filter(
+          (response: ResponseOutput) => {
+            if (branch(36, response.isMissingResponse)) {
+              // Missing response is meaningless for team statistics
+              return false;
+            }
+            if (branch([37, 38], this.isGqr && team !== response.giverTeam)) {
+              return false;
+            }
+            if (
+              branch([39, 40], !this.isGqr && team !== response.recipientTeam)
+            ) {
+              return false;
+            }
 
-          const shouldDisplayBasedOnSection: boolean = this.feedbackResponsesService
-              .isFeedbackResponsesDisplayedOnSection(response, this.section, this.sectionType);
+            const shouldDisplayBasedOnSection: boolean =
+              this.feedbackResponsesService.isFeedbackResponsesDisplayedOnSection(
+                response,
+                this.section,
+                this.sectionType
+              );
 
-          if (!shouldDisplayBasedOnSection) {
-            return false;
+            if (branch(41, !shouldDisplayBasedOnSection)) {
+              return false;
+            }
+
+            return true;
           }
+        );
 
-          return true;
-        });
-
-        if (questionCopy.allResponses.length) {
+        if (branch(42, questionCopy.allResponses.length)) {
+          branch(43);
           this.teamsToQuestions[team] = this.teamsToQuestions[team] || [];
           this.teamsToQuestions[team].push(questionCopy);
         }
