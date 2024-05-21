@@ -199,7 +199,7 @@ export class GqrRqgViewResponsesComponent
     }
   }
 
-  private filterUserExpandedRespones(): void {
+  filterUserExpandedRespones(): void {
     for (const user of Object.keys(this.userExpanded)) {
       for (const question of this.responses) {
         const questionCopy: QuestionOutput = JSON.parse(
