@@ -97,6 +97,9 @@ export class RubricQuestionEditDetailsFormComponent
 
   /**
    * Adds a new choice.
+   * 
+   * Will trigger a model change event to the parent class
+   * with empty values for the rubrics.
    */
   addNewChoice(): void {
     const newChoices: string[] = this.model.rubricChoices.slice();

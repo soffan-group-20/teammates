@@ -26,4 +26,28 @@ describe('RubricQuestionEditDetailsFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should addNewSubQuestion', () => {
+    const mock = jest.fn(function (arg: Partial<typeof component.model>) {
+      const { rubricSubQuestions, rubricDescriptions, rubricWeightsForEachCell } = arg;
+
+      expect(rubricSubQuestions).toBeTruthy();
+      expect(rubricSubQuestions?.length).toBe(1);
+      expect(rubricSubQuestions?.[0]).toBe('');
+
+      expect(rubricDescriptions).toBeTruthy();
+      expect(rubricDescriptions?.length).toBe(1);
+      expect(rubricDescriptions?.[0].length).toBe(0);
+
+      expect(rubricWeightsForEachCell).toBeTruthy();
+      expect(rubricWeightsForEachCell?.length).toBe(0);
+
+      console.log(rubricSubQuestions, rubricDescriptions, rubricWeightsForEachCell);
+    });
+
+    component.triggerModelChangeBatch = mock;
+    component.addNewSubQuestion();
+
+    expect(mock).toHaveBeenCalled();
+  });
 });
