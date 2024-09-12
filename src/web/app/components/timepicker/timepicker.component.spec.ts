@@ -29,4 +29,13 @@ describe('TimepickerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  fit('Should return true if given minute is less than minTime minute', () => {
+    component.minTime = {hour: 12, minute: 59};
+    component.minDate = {year: 2023, month: 2, day: 20};
+    component.date = {year: 2023, month: 2, day: 20};
+    let result = false;
+    result = component.isOptionDisabled({hour: 12, minute: 30});
+    expect(result).toBe(true);
+  });
 });
